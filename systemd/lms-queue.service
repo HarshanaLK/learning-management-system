@@ -1,0 +1,17 @@
+[Unit]
+Description=LMS Laravel Database Queue Worker
+After=network-online.target php8.3-fpm.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lmsdeploy
+Group=www-data
+WorkingDirectory=/var/www/lms
+ExecStart=/usr/bin/php8.3 artisan queue:work database --sleep=3 --tries=3 --timeout=60 --max-time=3600
+Restart=always
+RestartSec=5
+TimeoutStopSec=120
+
+[Install]
+WantedBy=multi-user.target

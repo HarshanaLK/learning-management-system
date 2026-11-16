@@ -1,0 +1,9 @@
+schemaVersion: '2.2'
+description: Deploy only the LMS application using the root-owned deployment script
+mainSteps:
+  - action: aws:runShellScript
+    name: deployLms
+    inputs:
+      timeoutSeconds: '3600'
+      runCommand:
+        - /usr/local/bin/deploy-lms

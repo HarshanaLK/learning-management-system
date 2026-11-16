@@ -1,0 +1,16 @@
+[Unit]
+Description=LMS Inertia SSR
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lmsdeploy
+Group=www-data
+WorkingDirectory=/var/www/lms
+ExecStart=/usr/bin/php8.3 artisan inertia:start-ssr
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
