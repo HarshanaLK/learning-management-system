@@ -24,9 +24,6 @@ return [
     | Default Connection Name
     |--------------------------------------------------------------------------
     |
-    | Here you may specify which of the connections below you wish to use as
-    | your default connection for all work. Of course, you may use many
-    | connections at once using the manager class.
     |
     */
 
@@ -37,18 +34,13 @@ return [
     | Vimeo Connections
     |--------------------------------------------------------------------------
     |
-    | Here are each of the connections setup for your application. Example
-    | configuration has been included, but you may add as many connections as
-    | you would like.
-    |
     */
-
     'connections' => [
 
         'main' => [
-            'client_id' => env('VIMEO_CLIENT', '1daedbaaf9f62c54fd02fb432aaf1cb53011c71d'),
-            'client_secret' => env('VIMEO_SECRET', 'jodp5azRKSKmAC+gx8I0QAgOa3V3KUM0NVa5V2H8lorJievlgFwrFfa95yzjBAsu505J1Kn+ry/1NXAzXjUf1h6D3a0fhK3EVg+Xqd3sXzj0RtLrG4CLCKrY6qs91vIh'),
-            'access_token' => env('VIMEO_ACCESS', '2cb5fa0eee4e6f5eb16327c3e499ffb2'),
+            'client_id' => env('VIMEO_CLIENT_ID'),
+            'client_secret' => env('VIMEO_CLIENT_SECRET'),
+            'access_token' => env('VIMEO_ACCESS_TOKEN'),
         ],
 
         'alternative' => [
