@@ -18,10 +18,8 @@ class PrivacyPolicyController extends Controller
     public function index()
     {
 
-        $policy = $this->privacyPolicyInterface->limit(1)->first();
-
         return Inertia::render('Admin/TermConditionHandle/Index', [
-            'privacyPolicy' => $policy,
+            'privacyPolicy' => $this->policyForPage(),
         ]);
     }
 
@@ -44,9 +42,23 @@ class PrivacyPolicyController extends Controller
 
     public function show()
     {
-        $policy = $this->privacyPolicyInterface->limit(1)->first();
         return Inertia::render('PublicArea/Term&Condition/Index', [
-            'privacyPolicy' => $policy,
+            'privacyPolicy' => $this->policyForPage(),
         ]);
+    }
+
+    /**
+     * Always supply a consistent prop shape, even before the first policy is created.
+     * React and Inertia SSR can safely render a missing or empty policy.
+     *
+     * @return array{content: string}
+     */
+    private function policyForPage(): array
+    {
+        $policy = $this->privacyPolicyInterface->findByColumn([], ['content']);
+
+        return [
+            'content' => $policy?->content ?? '',
+        ];
     }
 }

@@ -4,10 +4,13 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import Public from '@/Layouts/PublicLayout';
 import { useEffect, useState } from 'react';
 import BackgroundIcon from '@/Components/shared/BackgroundIcon/BackgroundIcon';
+import { getPrivacyPolicyContent, hasPrivacyPolicyContent, type PrivacyPolicyData } from '@/lib/privacyPolicy';
 
-const Term = ({ privacyPolicy }: { privacyPolicy: any }) => {
+const Term = ({ privacyPolicy }: { privacyPolicy?: PrivacyPolicyData }) => {
     const { props } = usePage();
-    const user = props.auth.user;
+    const user = props.auth?.user;
+    const content = getPrivacyPolicyContent(privacyPolicy);
+    const hasContent = hasPrivacyPolicyContent(content);
     const [isAccepted, setIsAccepted] = useState(false);
     const [showModal, setShowModal] = useState(false);
 
@@ -68,18 +71,18 @@ const Term = ({ privacyPolicy }: { privacyPolicy: any }) => {
                         <h2 className="text-2xl font-bold text-[#2BAFFC] mb-4">Terms and Conditions</h2>
                         <h2 className="text-lg font-bold mb-4">Your Agreement</h2>
                         <div className=" mt-2  text-[#6B6B6B] overflow-y-auto max-h-[409px] mb-4">
-                            {privacyPolicy.content ? (
-                                <p
-                                    className="text-[#6B6B6B] mt-12  mb-6"
-                                    dangerouslySetInnerHTML={{ __html: privacyPolicy.content }}
-                                ></p>
+                            {hasContent ? (
+                                <div
+                                    className="text-[#6B6B6B] mt-12 mb-6"
+                                    dangerouslySetInnerHTML={{ __html: content }}
+                                />
                             ) : (
-                                <p className="text-[#6B6B6B] mt-12 text-lg font-medium mb-6">
-                                    No privacy policy available at this time.
+                                <p className="text-[#6B6B6B] mt-12 text-lg font-medium mb-6" role="status">
+                                    The privacy policy is not available yet. Please check back later.
                                 </p>
                             )}
                         </div>
-                        {user ? (
+                        {!hasContent ? null : user ? (
                             <div className="text-lg text-green-600 flex justify-end mr-3 mt-4">
                                 You have already accepted this.
                             </div>

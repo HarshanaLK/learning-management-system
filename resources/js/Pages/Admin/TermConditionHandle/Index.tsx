@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { GrClose } from 'react-icons/gr';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { getPrivacyPolicyContent, hasPrivacyPolicyContent, type PrivacyPolicyData } from '@/lib/privacyPolicy';
 
 const bRoutes = [
     { name: "Dashboard", hasArrow: false, link: "/dashboard" },
@@ -15,10 +16,12 @@ const bRoutes = [
 export default function PrivacySetting({
     privacyPolicy,
 }: {
-    privacyPolicy: any;
+    privacyPolicy?: PrivacyPolicyData;
 }) {
-    const { data, setData, post, processing, errors, wasSuccessful, clearErrors } = useForm({
-        privacy_policy: privacyPolicy?.content || '',
+    const content = getPrivacyPolicyContent(privacyPolicy);
+    const hasContent = hasPrivacyPolicyContent(content);
+    const { data, setData, post, processing, errors, clearErrors } = useForm({
+        privacy_policy: content,
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +41,7 @@ export default function PrivacySetting({
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setData('privacy_policy', privacyPolicy?.content || '');
+        setData('privacy_policy', content);
         clearErrors();
     };
 
@@ -51,18 +54,24 @@ export default function PrivacySetting({
                 <div className="w-full bg-white lg:pr-6 sm:mx-0 px-4">
                     <h1 className="text-2xl font-bold mb-4">Privacy Editor</h1>
 
-                    <p
-                        className="text-[#6B6B6B] mt-12 mb-6"
-                        dangerouslySetInnerHTML={{ __html: privacyPolicy.content }}
-                    ></p>
+                    {hasContent ? (
+                        <div
+                            className="text-[#6B6B6B] mt-12 mb-6"
+                            dangerouslySetInnerHTML={{ __html: content }}
+                        />
+                    ) : (
+                        <p className="text-[#6B6B6B] mt-12 mb-6" role="status">
+                            No privacy policy has been created yet. Use the editor below to add one.
+                        </p>
+                    )}
 
                     <div className="flex flex-col sm:flex-row justify-left items-center mt-16 mb-16">
-                        <p className="text-base font-medium mt-1 mr-0 sm:mr-20 mb-4 sm:mb-[6px]">Create a new privacy policy page</p>
+                        <p className="text-base font-medium mt-1 mr-0 sm:mr-20 mb-4 sm:mb-[6px]">{hasContent ? "Edit the privacy policy page" : "Create a new privacy policy page"}</p>
                         <button
                             onClick={openModal}
                             className="bg-primary rounded-full max-w-52 text-sm font-medium text-white py-2 px-10 hover:bg-blue-600"
                         >
-                            Create
+                            {hasContent ? 'Edit' : 'Create'}
                         </button>
                     </div>
                 </div>
@@ -75,7 +84,7 @@ export default function PrivacySetting({
                         className="bg-white p-6 rounded-2xl shadow-lg w-[533px] relative"
                         style={{ maxHeight: '90vh', overflowY: 'auto' }} // Ensures scrolling
                     >
-                        <h2 className="text-xl font-bold mb-4">New Privacy Policy</h2>
+                        <h2 className="text-xl font-bold mb-4">{hasContent ? "Edit Privacy Policy" : "New Privacy Policy"}</h2>
                         <button
                             onClick={closeModal}
                             className="absolute top-7 right-8 text-lg text-black hover:text-gray-800"
